@@ -1,0 +1,12 @@
+use_frameworks!
+
+target 'WTLibrary-iOS-Swift_Example' do
+  pod 'WTLibrary-iOS-Swift', :path => '../'
+
+  target 'WTLibrary-iOS-Swift_Tests' do
+    inherit! :search_paths
+
+    pod 'Quick', '~> 1.0.0'
+  pod 'Nimble', '~> 5.1.1'
+  end
+end
