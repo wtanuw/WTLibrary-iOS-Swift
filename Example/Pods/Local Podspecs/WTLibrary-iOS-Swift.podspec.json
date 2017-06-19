@@ -1,0 +1,22 @@
+{
+  "name": "WTLibrary-iOS-Swift",
+  "version": "0.1.0",
+  "summary": "A short description of WTLibrary-iOS-Swift.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/wtanuw/WTLibrary-iOS-Swift",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "wtanuw": "wat_wtanuw@hotmail.com"
+  },
+  "source": {
+    "git": "https://github.com/wtanuw/WTLibrary-iOS-Swift.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "WTLibrary-iOS-Swift/Classes/**/*"
+}
