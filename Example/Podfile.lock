@@ -1,7 +1,9 @@
 PODS:
+  - AFDateHelper (4.1.2)
   - Nimble (5.1.1)
   - Quick (1.0.0)
-  - WTLibrary-iOS-Swift (0.1.0)
+  - WTLibrary-iOS-Swift (0.1.0):
+    - AFDateHelper (~> 4.1)
 
 DEPENDENCIES:
   - Nimble (~> 5.1.1)
@@ -10,13 +12,14 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   WTLibrary-iOS-Swift:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
+  AFDateHelper: b19c83daa132e398b34fbea085a1554ce07adfe9
   Nimble: 415e3aa3267e7bc2c96b05fa814ddea7bb686a29
   Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
-  WTLibrary-iOS-Swift: 61b8e94cb7405e73c350e55dd7bffc1853a3559a
+  WTLibrary-iOS-Swift: cfcc832d80759a3abc327ae5742a57ee17f4d3ce
 
 PODFILE CHECKSUM: ab542205b896e0f74d1dbf072ed67abd6bf207c1
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.2.0

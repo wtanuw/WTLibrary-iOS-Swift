@@ -10,11 +10,11 @@ import UIKit
 import QuartzCore
 
 @IBDesignable
-class ButtonExtender: UIButton {
+public class ButtonExtender: UIButton {
     //MARK: PROPERTIES
-    @IBInspectable var borderColor: UIColor = UIColor.whiteColor() {
+    @IBInspectable var borderColor: UIColor = UIColor.white {
         didSet {
-            layer.borderColor = borderColor.CGColor
+            layer.borderColor = borderColor.cgColor
         }
     }
     
@@ -39,43 +39,43 @@ class ButtonExtender: UIButton {
     }
     
     convenience init() {
-        self.init(frame:CGRectZero)
+        self.init(frame:CGRect.zero)
         setup()
         configure()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
         configure()
     }
     
     
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
         setup()
         configure()
     }
     
-    override func prepareForInterfaceBuilder() {
+    override public func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         setup()
         configure()
     }
     
     func setup() {
-        layer.borderColor = UIColor.whiteColor().CGColor
+        layer.borderColor = UIColor.white.cgColor
         layer.borderWidth = 1.0
         layer.cornerRadius = 1.0
     }
     
     func configure() {
-        layer.borderColor = borderColor.CGColor
+        layer.borderColor = borderColor.cgColor
         layer.borderWidth = borderWidth
         layer.cornerRadius = cornurRadius
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
     }
 }

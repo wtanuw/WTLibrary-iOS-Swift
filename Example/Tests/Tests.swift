@@ -2,7 +2,7 @@
 
 import Quick
 import Nimble
-import WTLibrary-iOS-Swift
+import WTLibrary_iOS_Swift
 
 class TableOfContentsSpec: QuickSpec {
     override func spec() {

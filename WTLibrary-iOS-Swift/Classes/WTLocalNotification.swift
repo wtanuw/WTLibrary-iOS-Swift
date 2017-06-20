@@ -7,14 +7,17 @@
 //
 
 import Foundation
+import UserNotifications
+
+public typealias WTUserNotificationCategory = (categoryID: String, actions: [UIUserNotificationAction], defaultContextIndex: [Int], minimalContextIndex: [Int])
 
 public class WTLocalNotification {
     
     static let NOTIFICATION_KEY = "kNotificationKey"
     
-    public static func scheduleLocalNotification(key: String = "standardLocalNotification", fireDate: NSDate? = nil, timeZone: NSTimeZone? = nil, repeatInterval: NSCalendarUnit = NSCalendarUnit(rawValue: 0), repeatCalendar: NSCalendar? = nil, title: String? = nil, body: String? = nil, action: String? = nil, launchImage: String? = nil, soundName: String? = nil, badgeNumber: Int = 0, userInfo: [NSObject:AnyObject]? = nil, category: String? = nil) {
+    public static func scheduleLocalNotification(_ key: String = "standardLocalNotification", fireDate: Foundation.Date? = nil, timeZone: TimeZone? = nil, repeatInterval: NSCalendar.Unit = NSCalendar.Unit(rawValue: 0), repeatCalendar: Calendar? = nil, title: String? = nil, body: String? = nil, action: String? = nil, launchImage: String? = nil, soundName: String? = nil, badgeNumber: Int = 0, userInfo: [AnyHashable:Any]? = nil, category: String? = nil) {
         
-        var dictUserInfo: [NSObject:AnyObject] = [NOTIFICATION_KEY: key]
+        var dictUserInfo: [AnyHashable:Any] = [NOTIFICATION_KEY: key]
         if let userInfo = userInfo {
             dictUserInfo += userInfo
         }
@@ -58,7 +61,7 @@ public class WTLocalNotification {
             notification.category = category
         }
         
-        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+        UIApplication.shared.scheduleLocalNotification(notification)
     }
     
 //    public static func () {
@@ -66,12 +69,12 @@ public class WTLocalNotification {
 //    }
     
     public static func changeIconBadgeNumber(number: Int) {
-        UIApplication.sharedApplication().applicationIconBadgeNumber = number
+        UIApplication.shared.applicationIconBadgeNumber = number
     }
     
     //MARK:
     
-    public static func presentLocalNotificationWithKey(key: String, title: String, message: String, soundName: String, userInfo: [NSObject: AnyObject]?) {
+    public static func presentLocalNotificationWithKey(key: String, title: String, message: String, soundName: String, userInfo: [AnyHashable: Any]?) {
 //        let notification = notificationWithTitle(key, title: title, message: message, date: nil, userInfo: ["key": key], soundName: nil, hasAction: true)
 //        UIApplication.sharedApplication().presentLocalNotificationNow(notification)
     }
@@ -97,7 +100,7 @@ public class WTLocalNotification {
     
     public static func getLocalNotificationWithKey(key : String) -> UILocalNotification? {
         var notification : UILocalNotification?
-        let allLocalNotification = UIApplication.sharedApplication().scheduledLocalNotifications
+        let allLocalNotification = UIApplication.shared.scheduledLocalNotifications
         if let allLocalNotification = allLocalNotification {
             for notif in allLocalNotification where notif.userInfo![NOTIFICATION_KEY] as! String == key{
                 notification = notif
@@ -109,39 +112,38 @@ public class WTLocalNotification {
     }
     
     public static func cancelLocalNotification(key : String){
-        let allLocalNotification = UIApplication.sharedApplication().scheduledLocalNotifications
+        let allLocalNotification = UIApplication.shared.scheduledLocalNotifications
         if let allLocalNotification = allLocalNotification {
             for notif in allLocalNotification where notif.userInfo![NOTIFICATION_KEY] as! String == key{
-                UIApplication.sharedApplication().cancelLocalNotification(notif)
+                UIApplication.shared.cancelLocalNotification(notif)
                 break
             }
         }
     }
     
     public static func cancelLocalNotification(notification: UILocalNotification) {
-        UIApplication.sharedApplication().cancelLocalNotification(notification)
+        UIApplication.shared.cancelLocalNotification(notification)
     }
     
     public static func getAllLocalNotifications() -> [UILocalNotification]? {
-        return UIApplication.sharedApplication().scheduledLocalNotifications
+        return UIApplication.shared.scheduledLocalNotifications
     }
     
     public static func cancelAllLocalNotifications() {
-        UIApplication.sharedApplication().cancelAllLocalNotifications()
+        UIApplication.shared.cancelAllLocalNotifications()
     }
     
     //MARK:
     
-    public static let AllUserNotificationType: UIUserNotificationType = [.Badge, .Sound, .Alert]
+    public static let AllUserNotificationType: UIUserNotificationType = [.badge, .sound, .alert]
     
     public static func registerUserNotificationType(notificationTypes: UIUserNotificationType) {
         
-        let settings = UIUserNotificationSettings(forTypes: notificationTypes, categories: nil)
+        let settings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
         
-        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.shared.registerUserNotificationSettings(settings)
+        
     }
-    
-    public typealias WTUserNotificationCategory = (categoryID: String, actions: [UIUserNotificationAction], defaultContextIndex: [Int], minimalContextIndex: [Int])
     
     public static func registerUserNotificationType(notificationTypes: UIUserNotificationType,  userCategories: [WTUserNotificationCategory]) {
         
@@ -156,7 +158,7 @@ public class WTLocalNotification {
                 for index in userCategory.defaultContextIndex {
                     actions += [userCategory.actions[index]]
                 }
-                category.setActions(actions, forContext: UIUserNotificationActionContext.Default)
+                category.setActions(actions, for: UIUserNotificationActionContext.default)
             }
             
             if userCategory.minimalContextIndex.count > 0 {
@@ -164,39 +166,39 @@ public class WTLocalNotification {
                 for index in userCategory.minimalContextIndex {
                     actions += [userCategory.actions[index]]
                 }
-                category.setActions(actions, forContext: UIUserNotificationActionContext.Minimal)
+                category.setActions(actions, for: UIUserNotificationActionContext.minimal)
             }
             
             categories += [category]
         }
         
-        let settings = UIUserNotificationSettings(forTypes: notificationTypes, categories: Set(categories))
+        let settings = UIUserNotificationSettings(types: notificationTypes, categories: Set(categories))
         
-        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.shared.registerUserNotificationSettings(settings)
     }
     
     //MARK:
     
-    public static func userNotificationAction(identifier identifier: String? = nil, title: String? = nil, activationMode: UIUserNotificationActivationMode = UIUserNotificationActivationMode.Background, authenticationRequired: Bool = true, destructive: Bool = false) -> UIUserNotificationAction {
+    public static func userNotificationAction(_ identifier: String? = nil, title: String? = nil, activationMode: UIUserNotificationActivationMode = UIUserNotificationActivationMode.background, authenticationRequired: Bool = true, destructive: Bool = false) -> UIUserNotificationAction {
         let action = UIMutableUserNotificationAction()
         action.identifier = identifier
         action.title = title
         action.activationMode = activationMode
-        action.authenticationRequired = authenticationRequired
-        action.destructive = destructive
+        action.isAuthenticationRequired = authenticationRequired
+        action.isDestructive = destructive
         return action
     }
     
-    @available(iOS 9.0, *)
-    public static func userNotificationAction(identifier identifier: String? = nil, title: String? = nil, activationMode: UIUserNotificationActivationMode = UIUserNotificationActivationMode.Background, authenticationRequired: Bool = true, destructive: Bool = false, behavior: UIUserNotificationActionBehavior = UIUserNotificationActionBehavior.Default, parameters: [NSObject : AnyObject]) -> UIUserNotificationAction {
-        let action = UIMutableUserNotificationAction()
-        action.identifier = identifier
-        action.title = title
-        action.behavior = behavior
-        action.parameters = parameters
-        action.activationMode = activationMode
-        action.authenticationRequired = authenticationRequired
-        action.destructive = destructive
-        return action
-    }
+//    @available(iOS 9.0, *)
+//    public static func userNotificationAction(_ identifier: String? = nil, title: String? = nil, activationMode: UIUserNotificationActivationMode = UIUserNotificationActivationMode.background, authenticationRequired: Bool = true, destructive: Bool = false, behavior: UIUserNotificationActionBehavior = UIUserNotificationActionBehavior.default, parameters: [NSObject : AnyObject]) -> UIUserNotificationAction {
+//        let action = UIMutableUserNotificationAction()
+//        action.identifier = identifier
+//        action.title = title
+//        action.behavior = behavior
+//        action.parameters = parameters
+//        action.activationMode = activationMode
+//        action.isAuthenticationRequired = authenticationRequired
+//        action.isDestructive = destructive
+//        return action
+//    }
 }

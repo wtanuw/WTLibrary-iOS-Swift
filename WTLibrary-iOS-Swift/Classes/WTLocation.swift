@@ -26,7 +26,7 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
     
     public func openSettingApp() {
         if #available(iOS 8.0, *) {
-            UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
+            UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
         }
     }
     
@@ -49,7 +49,7 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
     
     public func isAuthorizationNotDetemined() -> Bool {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        if authorizationStatus == CLAuthorizationStatus.NotDetermined {
+        if authorizationStatus == CLAuthorizationStatus.notDetermined {
             return true
         } else {
             return false
@@ -58,7 +58,7 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
     
     public func isAuthorization() -> Bool {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        if authorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse || authorizationStatus == CLAuthorizationStatus.AuthorizedAlways {
+        if authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse || authorizationStatus == CLAuthorizationStatus.authorizedAlways {
             return true
         } else {
             return false
@@ -67,7 +67,7 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
     
     public func isAuthorizationWhenInUse() -> Bool {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        if authorizationStatus == CLAuthorizationStatus.AuthorizedWhenInUse {
+        if authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse {
             return true
         } else {
             return false
@@ -76,7 +76,7 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
     
     public func isAuthorizationAlways() -> Bool {
         let authorizationStatus = CLLocationManager.authorizationStatus()
-        if authorizationStatus == CLAuthorizationStatus.AuthorizedAlways {
+        if authorizationStatus == CLAuthorizationStatus.authorizedAlways {
             return true
         } else {
             return false
@@ -84,9 +84,9 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
     }
     
     
-    public func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         
-        delegate?.locationManager?(manager, didChangeAuthorizationStatus: status)
+        delegate?.locationManager?(manager, didChangeAuthorization: status)
     }
     
 //MARK: -
@@ -113,11 +113,11 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
     }
     
     
-    public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        let location = locations.last!
-        let eventDate = location.timestamp
-        let howRecent = eventDate.timeIntervalSinceNow
+//        let location = locations.last!
+//        let eventDate = location.timestamp
+//        let howRecent = eventDate.timeIntervalSinceNow
 //        if (abs(howRecent) < 15.0) {
 //            // If the event is recent, do something with it.
 //            NSLog(@"latitude %+.6f, longitude %+.6f\n",
@@ -128,11 +128,11 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
 //        }
     }
     
-    public func locationManagerDidPauseLocationUpdates(manager: CLLocationManager) {
+    public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
         
     }
     
-    public func locationManagerDidResumeLocationUpdates(manager: CLLocationManager) {
+    public func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
         
     }
     
@@ -143,9 +143,9 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
         return deferredLocationUpdatesAvailable
     }
     
-    public func allowDeferredLocationUpdatesUntilTraveled(distance: CLLocationDistance, timeout: NSTimeInterval) {
+    public func allowDeferredLocationUpdatesUntilTraveled(_ distance: CLLocationDistance, timeout: TimeInterval) {
         if !self.deferringUpdates {
-            locationManager.allowDeferredLocationUpdatesUntilTraveled(distance, timeout: timeout)
+            locationManager.allowDeferredLocationUpdates(untilTraveled: distance, timeout: timeout)
             self.deferringUpdates = true
         }
     }
@@ -155,7 +155,7 @@ public class WTLocation: NSObject, CLLocationManagerDelegate {
         self.deferringUpdates = false
     }
     
-    public func locationManager(manager: CLLocationManager, didFinishDeferredUpdatesWithError error: NSError?) {
+    public func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
         
         self.deferringUpdates = false
         delegate?.locationManager?(manager, didFinishDeferredUpdatesWithError: error)

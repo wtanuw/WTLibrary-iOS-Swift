@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'WTLibrary-iOS-Swift'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'A simple life with WTLibrary-iOS-Swift.'
 
 # This description is used to generate tags and improve search results.
@@ -40,4 +40,5 @@ A simple life with WTLibrary-iOS-Swift.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'AFDateHelper', '~> 4.1'
 end

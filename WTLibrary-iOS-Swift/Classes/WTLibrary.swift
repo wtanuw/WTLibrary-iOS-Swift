@@ -16,24 +16,24 @@ import Foundation
 //}
 
 #if DEBUG
-    func dLog(message: String, filename: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+    func dLog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
         NSLog("[\(filename.lastPathComponent):\(line)] \(function) - \(message)")
     }
 #else
-    func dLog(message: String, filename: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {}
+    func dLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {}
 #endif
-func aLog(message: String, filename: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
+func aLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
     NSLog("[\(filename.lastPathComponent):\(line)] \(function) - \(message)")
 }
 
 //MARK:
 
 #if DEBUG
-    public func WatLog(message: String, filename: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {
-        NSLog("[\(filename.lastPathComponent!):\(line):\(function)] - \(message)")
+    public func WatLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
+    NSLog("[\(filename.lastPathComponent!):\(line):\(function)] - \(message)")
     }
 #else
-    public func WatLog(message: String, filename: String = __FILE__, function: String = __FUNCTION__, line: Int = __LINE__) {}
+    public func WatLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {}
 #endif
 
 //MARK:
@@ -51,18 +51,17 @@ extension String {
 }
 
 //MARK:
-func runAfterDelay(delay: NSTimeInterval, block: dispatch_block_t) {
-    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-    dispatch_after(time, dispatch_get_main_queue(), block)
+func runAfterDelay(delay: TimeInterval, block: @escaping () -> Void) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: block)
 }
 
 //MARK:
 extension String {
     func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: CGFloat.max)
+        let constraintRect = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         
-        let boundingBox = self.boundingRectWithSize(constraintRect,
-            options: NSStringDrawingOptions.UsesLineFragmentOrigin,
+        let boundingBox = self.boundingRect(with: constraintRect,
+            options: NSStringDrawingOptions.usesLineFragmentOrigin,
             attributes: [NSFontAttributeName: font],
             context: nil)
         
@@ -72,8 +71,8 @@ extension String {
 
 extension UIFont {
     func sizeOfString (string: String, constrainedToWidth width: Double) -> CGSize {
-        return (string as NSString).boundingRectWithSize(CGSize(width: width, height: DBL_MAX),
-            options: NSStringDrawingOptions.UsesLineFragmentOrigin,
+        return (string as NSString).boundingRect(with: CGSize(width: width, height: Double.greatestFiniteMagnitude),
+            options: NSStringDrawingOptions.usesLineFragmentOrigin,
             attributes: [NSFontAttributeName: self],
             context: nil).size
     }
@@ -81,20 +80,17 @@ extension UIFont {
 
 //MARK :
 
-func dispatch_after(seconds:Double, queue: dispatch_queue_t = dispatch_get_main_queue(), closure:()->()) -> (() -> ())? {
+func dispatch_after(seconds:Double, closure: @escaping ()->()) -> (() -> ())? {
     var cancelled = false
     let cancel_closure: () -> () = {
         cancelled = true
     }
     
-    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * Double(NSEC_PER_SEC)))
-    
-    dispatch_after(time, queue, {
-            if !cancelled {
-                closure()
-            }
+    DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: {
+        if !cancelled {
+            closure()
         }
-    )
+    })
     
     return cancel_closure
 }
@@ -285,9 +281,10 @@ func cancel_dispatch_after(cancel_closure: (() -> ())?) {
 //    })
 //})
 //In this case, the output will be - 1, 2, 3, completed, 2, 3, 4, interrupted. You can see here that interrupted event overrides completed, and output is different next time that we start a signal from a producer.
+
 //MARK:
 
-prefix operator √ {}
+prefix operator √
 prefix func √ (number: Double) -> Double {
     return sqrt(number)
 }
@@ -297,7 +294,7 @@ func ± (left: Double, right: Double) -> (Double, Double) {
     return (left + right, left - right)
 }
 
-prefix operator ± {}
+prefix operator ±
 prefix func ± (value: Double) -> (Double, Double) {
     return 0 ± value
 }
@@ -305,10 +302,10 @@ prefix func ± (value: Double) -> (Double, Double) {
 //MARK:
 
 // Array<Element> -> Dictionary<U:[Element]>
-public extension SequenceType {
+public extension Sequence {
     /// Categorises elements of self into a dictionary, with the keys given by keyFunc
-    func categorise<U : Hashable>(@noescape keyFunc: Generator.Element -> U) -> [U:[Generator.Element]] {
-        var dict: [U:[Generator.Element]] = [:]
+    func categorise<U : Hashable>(_ keyFunc: (Iterator.Element) -> U) -> [U:[Iterator.Element]] {
+        var dict: [U:[Iterator.Element]] = [:]
         for el in self {
             let key = keyFunc(el)
             if case nil = dict[key]?.append(el) { dict[key] = [el] }
@@ -318,11 +315,11 @@ public extension SequenceType {
 }
 // Dictionary<U:[Element] -> Array<[Element]>
 public extension Dictionary {
-    func group(keyFunc: (value1: Key, value2: Key) -> Bool) -> [Value] {
+    func group(_ keyFunc: @escaping (_ value1: Key, _ value2: Key) -> Bool) -> [Value] {
         var array: [Value] = []
         let keys = self.keys
-        let sortKey = keys.sort ({ (aa, bb) -> Bool in
-            return keyFunc(value1: aa, value2: bb)
+        let sortKey = keys.sorted (by: { (aa, bb) -> Bool in
+            return keyFunc(aa, bb)
         })
         for key in sortKey {
             let value = self[key]!
@@ -333,7 +330,7 @@ public extension Dictionary {
 }
 
 public extension Dictionary {
-    mutating func update(other:Dictionary) {
+    mutating func update(_ other:Dictionary) {
         for (key,value) in other {
             self.updateValue(value, forKey:key)
         }
@@ -342,7 +339,7 @@ public extension Dictionary {
 }
 
 // Dictionary += Dictionary
-public func += <K, V>(inout left: Dictionary<K, V>, right: Dictionary<K, V>) {
+public func += <K, V>(left: inout Dictionary<K, V>, right: Dictionary<K, V>) {
     for (k, v) in right {
         left.updateValue(v, forKey: k)
     }

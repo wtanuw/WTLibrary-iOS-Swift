@@ -19,9 +19,9 @@ public class WTBorderView : UIView {
         super.init(coder: aDecoder)
     }
     
-    @IBInspectable var borderColor : UIColor = UIColor.clearColor() {
+    @IBInspectable var borderColor : UIColor = UIColor.clear {
         didSet {
-            self.layer.borderColor = borderColor.CGColor
+            self.layer.borderColor = borderColor.cgColor
         }
     }
     
@@ -49,9 +49,9 @@ public class WTBorderLabel : UILabel {
         super.init(coder: aDecoder)
     }
     
-    @IBInspectable var borderColor : UIColor = UIColor.clearColor() {
+    @IBInspectable var borderColor : UIColor = UIColor.clear {
         didSet {
-            self.layer.borderColor = borderColor.CGColor
+            self.layer.borderColor = borderColor.cgColor
         }
     }
     
