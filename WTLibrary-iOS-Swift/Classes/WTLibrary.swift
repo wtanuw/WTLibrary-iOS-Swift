@@ -22,6 +22,7 @@ import Foundation
 #else
     func dLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {}
 #endif
+
 func aLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
     NSLog("[\(filename.lastPathComponent):\(line)] \(function) - \(message)")
 }
@@ -38,7 +39,7 @@ func aLog(_ message: String, filename: String = #file, function: String = #funct
 
 //MARK:
 
-extension String {
+public extension String {
     var ns: NSString {
         return self as NSString
     }
@@ -51,12 +52,12 @@ extension String {
 }
 
 //MARK:
-func runAfterDelay(delay: TimeInterval, block: @escaping () -> Void) {
+public func runAfterDelay(delay: TimeInterval, block: @escaping () -> Void) {
     DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: block)
 }
 
 //MARK:
-extension String {
+public extension String {
     func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
         let constraintRect = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         
@@ -69,7 +70,7 @@ extension String {
     }
 }
 
-extension UIFont {
+public extension UIFont {
     func sizeOfString (string: String, constrainedToWidth width: Double) -> CGSize {
         return (string as NSString).boundingRect(with: CGSize(width: width, height: Double.greatestFiniteMagnitude),
             options: NSStringDrawingOptions.usesLineFragmentOrigin,
@@ -80,7 +81,7 @@ extension UIFont {
 
 //MARK :
 
-func dispatch_after(seconds:Double, closure: @escaping ()->()) -> (() -> ())? {
+public func dispatch_after(seconds:Double, closure: @escaping ()->()) -> (() -> ())? {
     var cancelled = false
     let cancel_closure: () -> () = {
         cancelled = true
@@ -95,7 +96,7 @@ func dispatch_after(seconds:Double, closure: @escaping ()->()) -> (() -> ())? {
     return cancel_closure
 }
 
-func cancel_dispatch_after(cancel_closure: (() -> ())?) {
+public func cancel_dispatch_after(cancel_closure: (() -> ())?) {
     cancel_closure?()
 }
 
